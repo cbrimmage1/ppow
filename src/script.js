@@ -80,7 +80,7 @@ var texturesList = [
  for(var i = 0; i<25;i++) {
      // texturing
     var randIndex = THREE.Math.randInt(0, texturesList.length - 1)
-    var textureName = texturesList[randIndex] // e.g. 'images/22.png' 
+    var textureName = texturesList[randIndex] // e.g. 'images/22.png'
     var randTexture = loader.load(textureName)
 
     //remove randomTexture from textures list
@@ -213,7 +213,7 @@ const tick = () =>
     // Raycasting
     raycaster.setFromCamera(mouse, camera)
    
-    const objectstoTest = [mesh]
+    const objectstoTest = [...spheres]
     const intersects = raycaster.intersectObjects(objectstoTest)
 
 	if ( intersects.length > 0 ) {
