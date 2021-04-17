@@ -94,6 +94,7 @@ var texturesList = [
     var geometry = new THREE.SphereGeometry(1, 20, 20)
   
     var mesh = new THREE.Mesh(geometry, material)
+
     mesh.position.x = (Math.random() - 0.5) * 10
     mesh.position.y = (Math.random() - 0.5) * 10
     mesh.position.z = (Math.random() - 0.5) * 5
@@ -105,13 +106,19 @@ var texturesList = [
 // ** Raycaster ** //
 const raycaster = new THREE.Raycaster()
 
+const rayOrigin = new THREE.Vector3(0, 0, 0)
+const rayDirection = new THREE.Vector3(0, 0, 0)
+rayDirection.normalize()
+
+raycaster.set(rayOrigin, rayDirection)
+
 // ** Light**  //
-var light = new THREE.PointLight(0xFFFFFF, 5, 500)
+var light = new THREE.PointLight(0xFFFFFF, 5.5, 0, 2)
 light.position.set(0, 0, -25)
 scene.add(light)
 
-var light = new THREE.PointLight(0xFFFFFF, 5, 500)
-light.position.set(0, 0, 25)
+var light = new THREE.PointLight(0xFFFFFF, 5.5, 0, 2)
+light.position.set(0, 0, 15)
 scene.add(light)
 
 // ** Sizes ** //
@@ -135,33 +142,61 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-// ** Fullscreen ** //
-window.addEventListener('dblclick', () => 
-{
-    if(!document.fullscreenElement)
-    {
-        canvas.requestFullscreen()
-    }
-    else
-    {
-        document.exitFullscreen()
-    }
-})
-
-// ** Mouse ** //
-const mouse = new THREE.Vector2()
-
-window.addEventListener('mousemove', (event) =>
-{
-    mouse.x = event.clientX / sizes.width * 2 - 1
-    mouse.y = - (event.clientY / sizes.height) * 2 + 1
-})
+// ** Modal ** //
+var modal = document.getElementById("modal")
+var span = document.getElementsByClassName("close")[0];
 
 window.addEventListener('click', () => {
     if(INTERSECTED)
     {
-        console.log('click on a sphere')
+        modal.style.display = "block";
+
+        span.onclick = function() {
+            modal.style.display = "none";
+          }
+
+        // Pull image to HTML
+        document.getElementById("texture").src = INTERSECTED.material.map.image.currentSrc;
+        console.log(INTERSECTED.material.map.image.currentSrc)
+
+
     }
+    if (event.target == modal) {
+        modal.style.display = "none";
+      }
+})
+
+window.addEventListener('touchstart', () => {
+    if(INTERSECTED)
+    {
+        modal.style.display = "block";
+
+        span.onclick = function() {
+            modal.style.display = "none";
+          }
+    }
+    if (event.target == modal) {
+        modal.style.display = "none";
+      }
+})
+
+// ** Mouse + Touch ** //
+const mouse = new THREE.Vector2()
+
+window.addEventListener('mousemove', (event) =>
+{
+    event.preventDefault();
+    mouse.x = (event.clientX / sizes.width) * 2 - 1
+    mouse.y = - (event.clientY / sizes.height) * 2 + 1
+})
+
+const touch = new THREE.Vector2()
+
+window.addEventListener('touchstart', (event) =>
+{
+    event.preventDefault();
+    touch.x = (event.clientX / sizes.width) * 2 - 1
+    touch.y = - (event.clientY / sizes.height) * 2 + 1
 })
 
 // ** Camera ** //
@@ -176,12 +211,14 @@ controls.enableDamping = true
 controls.autoRotate = true
 controls.enableZoom = true
 controls.maxDistance = 10
+controls.enablePan = false
 
 // ** Renderer ** //
 
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
-    alpha: true
+    alpha: true,
+    antialias: true
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -211,10 +248,11 @@ const tick = () =>
     }
 
     // Raycasting
+
     raycaster.setFromCamera(mouse, camera)
    
     const objectstoTest = [...spheres]
-    const intersects = raycaster.intersectObjects(objectstoTest)
+    const intersects = raycaster.intersectObjects(objectstoTest,true)
 
 	if ( intersects.length > 0 ) {
 
@@ -222,19 +260,19 @@ const tick = () =>
 
 			if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex )
 
-			INTERSECTED = intersects[ 0 ].object
+            INTERSECTED = intersects[ 0 ].object
 			INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex()
-			INTERSECTED.material.emissive.setHex( 0xFFFFFF )
+            INTERSECTED.material.emissive.setHex( 0xFFFFFF )
 
 		}
 
 	} else {
 
-		if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex )
+        if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex )
 
 		INTERSECTED = null
 
-	}
+    }
 
 
     // Update controls
