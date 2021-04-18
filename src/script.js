@@ -16,6 +16,16 @@ const scene = new THREE.Scene()
     scene.fog = new THREE.FogExp2(color, density);
 }
 
+// ** Text Fade ** //
+window.onload = function() {
+    window.setTimeout(fadeout, 8000); //8 seconds
+  }
+  
+  function fadeout() {
+    document.getElementById('container').style.opacity = '0';
+    document.getElementById('footer').style.opacity = '0';
+  }
+
 // ** Particles ** //
 // Geometry
 const particlesGeometry = new THREE.BufferGeometry()
@@ -156,8 +166,8 @@ window.addEventListener('click', () => {
           }
 
         // Pull image to HTML
-        document.getElementById("texture").src = INTERSECTED.material.map.image.currentSrc;
-        console.log(INTERSECTED.material.map.image.currentSrc)
+        document.getElementById("texture").src = INTERSECTED.material.map.image.src;
+        console.log(INTERSECTED.material.map.image.src)
 
 
     }
