@@ -33,28 +33,50 @@ body {
   #container {
       height: 10%;
       color: white;
-      padding-top: 1.5em;
+      padding-top: 1.3em;
       padding-left: 1.5em;
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 1.3rem;
-      opacity: 1;
+      font-size: 1.4rem;
+  }
+
+  #header {
+    opacity: 1;
+    transition: 1s opacity;
+    position: relative;
+  }
+
+  #icon {
+      color: white;
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding-top: 1em;
+      padding-right: 1.1em;
+      font-size: 2.5rem;
+      opacity: 0;
       transition: 1s opacity;
+      z-index: 1;
+  }
+
+  #icon:hover {
+    color: #323232;
   }
 
   /* Modal Content/Box */
 .modal-content {
     background: #b6b6b665;
     border: 0.5em solid #ffffff77;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 15% auto;
     padding: 15px;
     border-radius: 1em;
     width: 25%;
-    height: 40%;
+    height: auto;
     overflow: auto;
-    position: relative;
   }
 
   #img {
+    max-width: 100%;
+    height: auto;
     display: block;
     margin-left: auto;
     margin-right: auto;

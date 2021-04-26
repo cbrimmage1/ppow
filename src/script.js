@@ -19,11 +19,16 @@ const scene = new THREE.Scene()
 // ** Text Fade ** //
 window.onload = function() {
     window.setTimeout(fadeout, 8000); //8 seconds
+    window.setTimeout(fadein, 8000); //8 seconds
   }
   
   function fadeout() {
-    document.getElementById('container').style.opacity = '0';
+    document.getElementById('header').style.opacity = '0';
     document.getElementById('footer').style.opacity = '0';
+  }
+
+  function fadein() {
+    document.getElementById('icon').style.opacity = '1';
   }
 
 // ** Particles ** //
@@ -181,7 +186,7 @@ window.addEventListener('touchstart', () => {
     {
         modal.style.display = "block";
 
-        span.onclick = function() {
+        span.ontouchstart = function() {
             modal.style.display = "none";
           }
     }
@@ -189,6 +194,7 @@ window.addEventListener('touchstart', () => {
         modal.style.display = "none";
       }
 })
+
 
 // ** Mouse + Touch ** //
 const mouse = new THREE.Vector2()
@@ -202,7 +208,7 @@ window.addEventListener('mousemove', (event) =>
 
 const touch = new THREE.Vector2()
 
-window.addEventListener('touchstart', (event) =>
+window.addEventListener('touchmove', (event) =>
 {
     event.preventDefault();
     touch.x = (event.clientX / sizes.width) * 2 - 1
@@ -259,7 +265,7 @@ const tick = () =>
 
     // Raycasting
 
-    raycaster.setFromCamera(mouse, camera)
+    raycaster.setFromCamera(mouse, camera) // need to be able to raycast from touch as well
    
     const objectstoTest = [...spheres]
     const intersects = raycaster.intersectObjects(objectstoTest,true)
