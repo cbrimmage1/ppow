@@ -157,7 +157,7 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-// ** Modal ** //
+// ** Sphere Modal ** //
 var modal = document.getElementById("modal")
 var span = document.getElementsByClassName("close")[0];
 
@@ -195,6 +195,19 @@ window.addEventListener('touchstart', () => {
       }
 })
 
+// ** Info Modal ** //
+var info = document.getElementById("info");
+var btn = document.getElementById("icon");
+
+btn.onclick = function() {
+  info.style.display = "block";
+}
+
+window.onclick = function(event) {
+  if (event.target == info) {
+    info.style.display = "none";
+  }
+}
 
 // ** Mouse + Touch ** //
 const mouse = new THREE.Vector2()
