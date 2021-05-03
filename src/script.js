@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 let INTERSECTED
+const pointer = new THREE.Vector2()
 
 // ** Canvas**  //
 const canvas = document.querySelector('canvas.webgl')
@@ -121,12 +122,6 @@ var texturesList = [
 // ** Raycaster ** //
 const raycaster = new THREE.Raycaster()
 
-const rayOrigin = new THREE.Vector3(0, 0, 0)
-const rayDirection = new THREE.Vector3(0, 0, 0)
-rayDirection.normalize()
-
-raycaster.set(rayOrigin, rayDirection)
-
 // ** Light**  //
 var light = new THREE.PointLight(0xFFFFFF, 5.5, 0, 2)
 light.position.set(0, 0, -25)
@@ -159,16 +154,11 @@ window.addEventListener('resize', () =>
 
 // ** Sphere Modal ** //
 var modal = document.getElementById("modal")
-var span = document.getElementsByClassName("close")[0];
 
 window.addEventListener('click', () => {
     if(INTERSECTED)
     {
         modal.style.display = "block";
-
-        span.onclick = function() {
-            modal.style.display = "none";
-          }
 
         // Pull image to HTML
         document.getElementById("texture").src = INTERSECTED.material.map.image.src;
@@ -186,13 +176,14 @@ window.addEventListener('touchstart', () => {
     {
         modal.style.display = "block";
 
-        span.ontouchstart = function() {
-            modal.style.display = "none";
-          }
     }
     if (event.target == modal) {
         modal.style.display = "none";
       }
+
+    // Pull image to HTML
+    document.getElementById("texture").src = INTERSECTED.material.map.image.src;
+    console.log(INTERSECTED.material.map.image.src)
 })
 
 // ** Info Modal ** //
@@ -209,24 +200,22 @@ window.onclick = function(event) {
   }
 }
 
+window.addEventListener('touchstart', () => {
+    if (event.target == info) {
+        info.style.display = "none";
+      }
+})
+
 // ** Mouse + Touch ** //
-const mouse = new THREE.Vector2()
 
-window.addEventListener('mousemove', (event) =>
-{
-    event.preventDefault();
-    mouse.x = (event.clientX / sizes.width) * 2 - 1
-    mouse.y = - (event.clientY / sizes.height) * 2 + 1
-})
+document.addEventListener( 'pointermove', onPointerMove );
 
-const touch = new THREE.Vector2()
+function onPointerMove( event ) {
 
-window.addEventListener('touchmove', (event) =>
-{
-    event.preventDefault();
-    touch.x = (event.clientX / sizes.width) * 2 - 1
-    touch.y = - (event.clientY / sizes.height) * 2 + 1
-})
+    pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1
+    pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1
+
+}
 
 // ** Camera ** //
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
@@ -278,7 +267,7 @@ const tick = () =>
 
     // Raycasting
 
-    raycaster.setFromCamera(mouse, camera) // need to be able to raycast from touch as well
+    raycaster.setFromCamera(pointer, camera)
    
     const objectstoTest = [...spheres]
     const intersects = raycaster.intersectObjects(objectstoTest,true)
